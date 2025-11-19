@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
 import { join } from 'path';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
@@ -36,6 +37,19 @@ import { AppService } from './app.service';
       sortSchema: true,
       context: ({ req }: { req: Request }) => ({ req }),
       playground: true,
+    }),
+    // Rate limiting
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService): ThrottlerModuleOptions => ({
+        throttlers: [
+          {
+            ttl: configService.get<number>('THROTTLE_TTL') || 60000,
+            limit: configService.get<number>('THROTTLE_LIMIT') || 10,
+          },
+        ],
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
