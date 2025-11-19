@@ -7,12 +7,14 @@ import { join } from 'path';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { appConfig, databaseConfig, jwtConfig } from './config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      load: [appConfig, databaseConfig, jwtConfig],
+      envFilePath: ['.env.local', '.env'],
     }),
     LoggerModule.forRootAsync({
       imports: [ConfigModule],
