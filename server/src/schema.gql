@@ -2,6 +2,32 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AuthResponse {
+  accessToken: String!
+  refreshToken: String!
+  user: User!
+}
+
+input LoginInput {
+  password: String!
+  username: String!
+}
+
+type Mutation {
+  login(input: LoginInput!): AuthResponse!
+  logout: Boolean!
+  register(input: RegisterInput!): AuthResponse!
+}
+
 type Query {
   hello: String!
+}
+
+input RegisterInput {
+  password: String!
+  username: String!
+}
+
+type User {
+  username: String!
 }
