@@ -11,6 +11,7 @@ import { appConfig, databaseConfig, jwtConfig } from './config';
 import { DatabaseModule } from './database';
 import { UsersModule } from './modules/users/users.module';
 import { DepartmentsModule } from './modules/departments/departments.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { DepartmentsModule } from './modules/departments/departments.module';
     }),
     UsersModule,
     DepartmentsModule,
+    AuthModule,
   ],
   providers: [AppService, AppResolver],
 })
