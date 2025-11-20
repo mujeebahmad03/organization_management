@@ -7,7 +7,9 @@ import { join } from 'path';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AppResolver } from './app.resolver';
 import { appConfig, databaseConfig, jwtConfig } from './config';
+import { DatabaseModule } from './database';
 
 @Module({
   imports: [
@@ -33,6 +35,7 @@ import { appConfig, databaseConfig, jwtConfig } from './config';
 
       inject: [ConfigService],
     }),
+    DatabaseModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -55,6 +58,6 @@ import { appConfig, databaseConfig, jwtConfig } from './config';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppResolver],
 })
 export class AppModule {}
