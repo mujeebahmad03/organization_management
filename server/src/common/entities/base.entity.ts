@@ -2,10 +2,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  BaseEntity,
 } from 'typeorm';
 
-export abstract class BaseCoreEntity extends BaseEntity {
+export abstract class BaseCoreEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

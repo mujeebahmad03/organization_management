@@ -10,6 +10,7 @@ import { AppResolver } from './app.resolver';
 import { appConfig, databaseConfig, jwtConfig } from './config';
 import { DatabaseModule } from './database';
 import { UsersModule } from './modules/users/users.module';
+import { DepartmentsModule } from './modules/departments/departments.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { UsersModule } from './modules/users/users.module';
       inject: [ConfigService],
     }),
     UsersModule,
+    DepartmentsModule,
   ],
   providers: [AppService, AppResolver],
 })
