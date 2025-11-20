@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'src/modules/users/entities';
-import { JwtPayload, Tokens } from '../interfaces';
+import { JwtPayload, Token } from '../interfaces';
 
 @Injectable()
 export class JwtAuthService {
@@ -11,7 +11,7 @@ export class JwtAuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async generateTokens(user: User): Promise<Tokens> {
+  async generateTokens(user: User): Promise<Token> {
     const payload: JwtPayload = {
       sub: user.id,
       username: user.username,
@@ -19,24 +19,16 @@ export class JwtAuthService {
 
     const accessTokenExpiresIn =
       this.configService.get<string>('jwt.expiresIn');
-    const refreshTokenExpiresIn = this.configService.get<string>(
-      'jwt.refreshExpiresIn',
-    );
 
-    const [accessToken, refreshToken] = await Promise.all([
+    const [accessToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.getOrThrow<string>('jwt.secret'),
         expiresIn: accessTokenExpiresIn as never,
-      }),
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.getOrThrow<string>('jwt.refreshSecret'),
-        expiresIn: refreshTokenExpiresIn as never,
       }),
     ]);
 
     return {
       accessToken,
-      refreshToken,
     };
   }
 }
