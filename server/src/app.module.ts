@@ -5,11 +5,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
 import { join } from 'path';
 import { LoggerModule } from 'nestjs-pino';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppResolver } from './app.resolver';
 import { appConfig, databaseConfig, jwtConfig } from './config';
 import { DatabaseModule } from './database';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -56,8 +56,8 @@ import { DatabaseModule } from './database';
       }),
       inject: [ConfigService],
     }),
+    UsersModule,
   ],
-  controllers: [AppController],
   providers: [AppService, AppResolver],
 })
 export class AppModule {}
