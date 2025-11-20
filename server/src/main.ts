@@ -79,7 +79,7 @@ async function bootstrap() {
 
   console.log(`Application is running on: http://localhost:${port}`);
   console.log(`GraphQL Playground: http://localhost:${port}/graphql`);
-  console.log(`Swagger API Documentation: http://localhost:${port}/api`);
+  console.log(`Swagger API Documentation: http://localhost:${port}/docs`);
 }
 
 bootstrap().catch((error) => {
