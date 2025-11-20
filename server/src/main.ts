@@ -5,6 +5,8 @@ import { AppModule } from './app.module';
 import helmet from 'helmet';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'nestjs-pino';
+import { LoggingInterceptor } from './common/interceptors';
+import { GraphQLExceptionFilter } from './common/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create<INestApplication>(AppModule);
@@ -38,6 +40,12 @@ async function bootstrap() {
       },
     }),
   );
+
+  // Global exception filter for GraphQL
+  app.useGlobalFilters(new GraphQLExceptionFilter());
+
+  // Global interceptor for logging
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   // Swagger configuration
   const config = new DocumentBuilder()

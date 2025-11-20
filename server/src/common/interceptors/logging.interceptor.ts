@@ -15,17 +15,31 @@ export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LoggingInterceptor.name);
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const ctx = GqlExecutionContext.create(context);
-    const info = ctx.getInfo<GraphQLResolveInfo>();
     const now = Date.now();
+    const isGraphQL = context.getType<'graphql' | 'http'>() === 'graphql';
+
+    let fieldName: string | undefined;
+    if (isGraphQL) {
+      try {
+        const ctx = GqlExecutionContext.create(context);
+        const info = ctx.getInfo<GraphQLResolveInfo>();
+        fieldName = info?.fieldName;
+      } catch {
+        // Not a GraphQL context, ignore
+      }
+    } else {
+      // For REST endpoints, use the handler name
+      const handler = context.getHandler();
+      fieldName = handler.name;
+    }
 
     return next.handle().pipe(
       tap(() => {
         const responseTime = Date.now() - now;
-        this.logger.log(
-          `${info?.fieldName} - ${responseTime}ms`,
-          context.getClass().name,
-        );
+        const logMessage = fieldName
+          ? `${fieldName} - ${responseTime}ms`
+          : `${responseTime}ms`;
+        this.logger.log(logMessage, context.getClass().name);
       }),
     );
   }
