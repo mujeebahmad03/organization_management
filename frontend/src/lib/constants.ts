@@ -1,6 +1,7 @@
 // API Configuration
 export const API_CONFIG = {
-  GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:5050/graphql",
+  GRAPHQL_URL:
+    process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:5050/graphql",
   REST_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5050",
 } as const;
 
@@ -15,9 +16,7 @@ export const COOKIE_CONFIG = {
 export const ROUTES = {
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
-  DASHBOARD: "/dashboard",
-  DEPARTMENTS: "/dashboard/departments",
-  SUB_DEPARTMENTS: "/dashboard/sub-departments",
+  DASHBOARD: "/",
 } as const;
 
 // Error Messages
@@ -51,7 +50,7 @@ export const UI_CONSTANTS = {
 
 // Confirmation Messages
 export const CONFIRM_MESSAGES = {
-  DELETE_DEPARTMENT: "Are you sure you want to delete this department? This will also delete all sub-departments.",
+  DELETE_DEPARTMENT:
+    "Are you sure you want to delete this department? This will also delete all sub-departments.",
   DELETE_SUB_DEPARTMENT: "Are you sure you want to delete this sub-department?",
 } as const;
-

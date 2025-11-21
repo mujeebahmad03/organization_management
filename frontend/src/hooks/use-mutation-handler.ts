@@ -32,20 +32,16 @@ export function useMutationHandler<
   const [mutate, { loading }] = useMutation<TData, TVariables>(mutation, {
     ...apolloOptions,
     onCompleted: (data) => {
-      if (successMessage) {
-        // Could integrate with a toast notification system here
-        console.log(successMessage);
-      }
       onSuccess?.(data);
-      refetch?.();
+      if (refetch) {
+        refetch();
+      }
     },
     onError: (error) => {
       const message =
         errorMessage || error.message || ERROR_MESSAGES.UNKNOWN_ERROR;
-      if (typeof window !== "undefined") {
-        alert(message);
-      }
       onError?.(error);
+      // Error handling is done by the caller via onError callback
     },
   });
 
