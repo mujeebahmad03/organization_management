@@ -20,10 +20,22 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS
+  // Enable CORS with security considerations
+  const nodeEnv = configService.get<string>('app.nodeEnv');
+  const allowedOrigins = configService
+    .get<string>('CORS_ORIGINS', '')
+    .split(',')
+    .filter((origin) => origin.trim());
+
   app.enableCors({
-    origin: true,
+    origin:
+      nodeEnv === 'production' && allowedOrigins.length > 0
+        ? allowedOrigins
+        : true, // Allow all origins in development
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Length', 'X-Total-Count'],
   });
 
   // Setup Pino logger

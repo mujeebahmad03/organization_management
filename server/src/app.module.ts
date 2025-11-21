@@ -38,12 +38,22 @@ import { AuthModule } from './modules/auth/auth.module';
       inject: [ConfigService],
     }),
     DatabaseModule,
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      sortSchema: true,
-      context: ({ req }: { req: Request }) => ({ req }),
-      playground: true,
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        const isProduction =
+          configService.get<string>('app.nodeEnv') === 'production';
+        return {
+          autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+          sortSchema: true,
+          context: ({ req }: { req: Request }) => ({ req }),
+          // Security: Disable playground and introspection in production
+          playground: !isProduction,
+          introspection: !isProduction,
+        };
+      },
+      inject: [ConfigService],
     }),
     // Rate limiting
     ThrottlerModule.forRootAsync({

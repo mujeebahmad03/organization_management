@@ -1,16 +1,11 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNotEmpty, IsString, MinLength, IsInt } from 'class-validator';
+import { InputType } from '@nestjs/graphql';
+import { IdField, NameField } from 'src/common/decorators';
 
 @InputType()
 export class CreateSubDepartmentInput {
-  @Field(() => Int)
-  @IsNotEmpty()
-  @IsInt()
+  @IdField()
   departmentId: number;
 
-  @Field()
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(2)
+  @NameField()
   name: string;
 }

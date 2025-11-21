@@ -54,13 +54,18 @@ export class DepartmentsService {
   }
 
   async findOne(id: number): Promise<Department> {
+    // Validate ID is positive
+    if (!id || id < 1 || !Number.isInteger(id)) {
+      throw new NotFoundException('Invalid department ID');
+    }
+
     const department = await this.departmentRepository.findOne({
       where: { id },
       relations: ['subDepartments'],
     });
 
     if (!department) {
-      throw new NotFoundException(`Department with ID ${id} not found`);
+      throw new NotFoundException('Department not found');
     }
 
     return department;
@@ -143,13 +148,18 @@ export class DepartmentsService {
   }
 
   async findSubDepartmentById(id: number): Promise<SubDepartment> {
+    // Validate ID is positive
+    if (!id || id < 1 || !Number.isInteger(id)) {
+      throw new NotFoundException('Invalid sub-department ID');
+    }
+
     const subDepartment = await this.subDepartmentRepository.findOne({
       where: { id },
       relations: ['department'],
     });
 
     if (!subDepartment) {
-      throw new NotFoundException(`SubDepartment with ID ${id} not found`);
+      throw new NotFoundException('Sub-department not found');
     }
 
     return subDepartment;
