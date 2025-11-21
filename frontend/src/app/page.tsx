@@ -19,10 +19,11 @@ import { useDepartmentSearch } from "@/hooks/use-department-search";
 import { useAuth } from "@/contexts/auth-context";
 import type { Department } from "@/lib/types";
 import type { FormValues } from "@/components/department/form/base-form";
+import type { DepartmentFormValues } from "@/components/department/form/department-form";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
-  const { departments, loading, error } = useDepartments();
+  const { departments, loading, error, refetch } = useDepartments();
   const { loading: mutationsLoading } = useDepartmentMutations();
 
   const modals = useDepartmentModals();
@@ -31,16 +32,48 @@ export default function DashboardPage() {
     useDepartmentSearch(departments);
 
   const handlers = useDepartmentHandlers({
-    onDeptSuccess: modals.closeDeptModal,
+    onDeptSuccess: async () => {
+      modals.closeDeptModal();
+      await refetch();
+    },
     onSubDeptSuccess: modals.closeSubDeptModal,
   });
 
   // Department Handlers
-  const handleCreateDepartment = async (values: FormValues) => {
-    await handlers.handleCreateDepartment(values);
+  const handleCreateDepartment = async (values: DepartmentFormValues) => {
+    try {
+      // Create the department
+      await handlers.handleCreateDepartment(values);
+
+      // If there are sub-departments, create them after the department is created
+      if (values.subDepartments && values.subDepartments.length > 0) {
+        // Wait a bit for the department to be created, then refetch
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Refetch to get the new department ID
+        const result = await refetch();
+        const newDepartment = result.data?.getDepartments.find(
+          (dept) => dept.name === values.name
+        );
+
+        if (newDepartment) {
+          // Create all sub-departments
+          for (const subDept of values.subDepartments) {
+            if (subDept.name.trim()) {
+              await handlers.handleCreateSubDepartment(
+                { name: subDept.name },
+                newDepartment.id
+              );
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error creating department with sub-departments:", error);
+    }
   };
 
-  const handleUpdateDepartment = async (values: FormValues) => {
+  const handleUpdateDepartment = async (values: DepartmentFormValues) => {
     if (!modals.editingDept) return;
     await handlers.handleUpdateDepartment(values, modals.editingDept.id);
   };
