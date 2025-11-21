@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { User } from 'src/modules/users/entities';
 
 export interface AuthenticatedRequest extends Request {
@@ -7,4 +7,5 @@ export interface AuthenticatedRequest extends Request {
 
 export interface GraphQLContext {
   req: AuthenticatedRequest;
+  res?: Response;
 }

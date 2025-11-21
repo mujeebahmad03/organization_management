@@ -29,7 +29,6 @@ import { AuthController } from './auth.controller';
         secret: configService.get<string>('jwt.secret'),
         signOptions: {
           expiresIn: Number(configService.get<string>('jwt.expiresIn')),
-          secret: configService.get<string>('jwt.secret'),
         },
       }),
       inject: [ConfigService],

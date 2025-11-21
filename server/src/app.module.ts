@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
 import { join } from 'path';
 import { LoggerModule } from 'nestjs-pino';
+import { Request, Response } from 'express';
 import { AppService } from './app.service';
 import { AppResolver } from './app.resolver';
 import { appConfig, databaseConfig, jwtConfig } from './config';
@@ -49,7 +50,10 @@ import { GqlThrottlerGuard } from './common/guards';
         return {
           autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
           sortSchema: true,
-          context: ({ req }: { req: Request }) => ({ req }),
+          context: ({ req, res }: { req: Request; res: Response }) => ({
+            req,
+            res,
+          }),
           // Security: Disable playground and introspection in production
           playground: !isProduction,
           introspection: !isProduction,

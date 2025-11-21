@@ -230,7 +230,113 @@ curl -X POST http://localhost:3000/graphql \
   }'
 ```
 
-### Example GraphQL Queries
+## Testing GraphQL Endpoints
+
+### Method 1: GraphQL Playground (Recommended for Development)
+
+The easiest way to test GraphQL endpoints is using the built-in GraphQL Playground:
+
+1. Start your server:
+```bash
+npm run start:dev
+```
+
+2. Open your browser and navigate to:
+```
+http://localhost:3000/graphql
+```
+
+3. **Set up authentication:**
+   - First, register/login via REST API to get a token
+   - In GraphQL Playground, go to the bottom left "HTTP HEADERS" panel
+   - Add your JWT token:
+   ```json
+   {
+     "Authorization": "Bearer YOUR_TOKEN_HERE"
+   }
+   ```
+
+4. **Test queries and mutations** directly in the playground interface
+
+### Method 2: Using cURL
+
+**1. First, get an authentication token:**
+```bash
+# Register a new user
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "password": "password123"
+  }'
+
+# Or login
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "password": "password123"
+  }'
+```
+
+**2. Use the token to make GraphQL requests:**
+```bash
+# Get all departments
+curl -X POST http://localhost:3000/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "query": "query { getDepartments { id name subDepartments { id name } } }"
+  }'
+
+# Create a department
+curl -X POST http://localhost:3000/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "query": "mutation { createDepartment(input: { name: \"Engineering\" subDepartments: [{ name: \"Backend\" }] }) { id name subDepartments { id name } } }"
+  }'
+```
+
+### Method 3: Using GraphQL Clients
+
+You can also use tools like:
+- **Postman** - Has GraphQL support
+- **Insomnia** - Great GraphQL client
+- **Apollo Studio** - Official Apollo tool
+- **Altair GraphQL Client** - Browser extension
+
+### Example GraphQL Queries & Mutations
+
+**Get all departments:**
+```graphql
+query {
+  getDepartments {
+    id
+    name
+    createdAt
+    subDepartments {
+      id
+      name
+    }
+  }
+}
+```
+
+**Get a single department:**
+```graphql
+query {
+  getDepartment(id: 1) {
+    id
+    name
+    createdAt
+    subDepartments {
+      id
+      name
+    }
+  }
+}
+```
 
 **Create a department:**
 ```graphql
@@ -252,13 +358,15 @@ mutation {
 }
 ```
 
-**Get all departments:**
+**Create a department without sub-departments:**
 ```graphql
-query {
-  getDepartments {
+mutation {
+  createDepartment(input: {
+    name: "HR"
+    subDepartments: null
+  }) {
     id
     name
-    createdAt
     subDepartments {
       id
       name
@@ -266,6 +374,103 @@ query {
   }
 }
 ```
+
+**Update a department:**
+```graphql
+mutation {
+  updateDepartment(input: {
+    id: 1
+    name: "Engineering Updated"
+  }) {
+    id
+    name
+  }
+}
+```
+
+**Delete a department:**
+```graphql
+mutation {
+  deleteDepartment(id: 1)
+}
+```
+
+**Create a sub-department:**
+```graphql
+mutation {
+  createSubDepartment(input: {
+    departmentId: 1
+    name: "DevOps"
+  }) {
+    id
+    name
+    departmentId
+  }
+}
+```
+
+**Get all sub-departments:**
+```graphql
+query {
+  getSubDepartments {
+    id
+    name
+    departmentId
+    department {
+      id
+      name
+    }
+  }
+}
+```
+
+**Update a sub-department:**
+```graphql
+mutation {
+  updateSubDepartment(input: {
+    id: 1
+    name: "DevOps Updated"
+  }) {
+    id
+    name
+  }
+}
+```
+
+**Delete a sub-department:**
+```graphql
+mutation {
+  deleteSubDepartment(id: 1)
+}
+```
+
+**Logout (GraphQL):**
+```graphql
+mutation {
+  logout
+}
+```
+
+### Testing Tips
+
+1. **Authentication**: All department endpoints require a valid JWT token in the Authorization header
+2. **Error Handling**: Check the response for `errors` array if something goes wrong
+3. **Variables**: You can use GraphQL variables for cleaner queries:
+   ```graphql
+   query GetDepartment($id: Int!) {
+     getDepartment(id: $id) {
+       id
+       name
+     }
+   }
+   ```
+   Variables:
+   ```json
+   {
+     "id": 1
+   }
+   ```
+4. **Schema Documentation**: Use GraphQL Playground's "Docs" panel to explore available queries and mutations
 
 ## Security Features
 
