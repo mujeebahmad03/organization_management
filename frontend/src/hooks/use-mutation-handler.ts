@@ -1,9 +1,13 @@
 import { useCallback } from "react";
 import { useMutation, MutationHookOptions } from "@apollo/client/react";
+import { OperationVariables } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import { ERROR_MESSAGES } from "@/lib/constants";
 
-interface UseMutationHandlerOptions<TData, TVariables> {
+interface UseMutationHandlerOptions<
+  TData = unknown,
+  TVariables extends OperationVariables = OperationVariables
+> {
   mutation: DocumentNode;
   onSuccess?: (data: TData) => void;
   onError?: (error: Error) => void;
@@ -13,7 +17,10 @@ interface UseMutationHandlerOptions<TData, TVariables> {
   apolloOptions?: MutationHookOptions<TData, TVariables>;
 }
 
-export function useMutationHandler<TData = any, TVariables = any>({
+export function useMutationHandler<
+  TData = unknown,
+  TVariables extends OperationVariables = OperationVariables
+>({
   mutation,
   onSuccess,
   onError,
@@ -33,7 +40,8 @@ export function useMutationHandler<TData = any, TVariables = any>({
       refetch?.();
     },
     onError: (error) => {
-      const message = errorMessage || error.message || ERROR_MESSAGES.UNKNOWN_ERROR;
+      const message =
+        errorMessage || error.message || ERROR_MESSAGES.UNKNOWN_ERROR;
       if (typeof window !== "undefined") {
         alert(message);
       }
@@ -45,7 +53,7 @@ export function useMutationHandler<TData = any, TVariables = any>({
     async (variables: TVariables) => {
       try {
         await mutate({ variables });
-      } catch (error) {
+      } catch {
         // Error is handled in onError callback
       }
     },
@@ -54,4 +62,3 @@ export function useMutationHandler<TData = any, TVariables = any>({
 
   return { execute, loading };
 }
-

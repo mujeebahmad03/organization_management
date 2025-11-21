@@ -44,6 +44,12 @@ export function SubDepartmentForm({
     },
   });
 
+  // Type-safe access to departmentId error (only exists in create mode)
+  const departmentIdError =
+    !initialData && "departmentId" in errors
+      ? (errors as Record<string, { message?: string }>).departmentId
+      : undefined;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {!initialData && (
@@ -58,7 +64,7 @@ export function SubDepartmentForm({
               text-gray-900 dark:text-gray-100
               border-gray-300 dark:border-gray-600
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              ${errors.departmentId ? "border-red-500 focus:ring-red-500" : ""}
+              ${departmentIdError ? "border-red-500 focus:ring-red-500" : ""}
             `}
             {...register("departmentId", { valueAsNumber: true })}
           >
@@ -68,9 +74,9 @@ export function SubDepartmentForm({
               </option>
             ))}
           </select>
-          {errors.departmentId && (
+          {departmentIdError && (
             <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">
-              {errors.departmentId.message as string}
+              {departmentIdError.message as string}
             </p>
           )}
         </div>
