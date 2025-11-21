@@ -7,24 +7,70 @@ type AuthResponse {
   user: User!
 }
 
+input CreateDepartmentInput {
+  name: String!
+  subDepartments: [SubDepartmentInput!]
+}
+
+input CreateSubDepartmentInput {
+  departmentId: Int!
+  name: String!
+}
+
+type Department {
+  createdBy: Float!
+  name: String!
+  subDepartments: [SubDepartment!]
+}
+
 input LoginInput {
   password: String!
   username: String!
 }
 
 type Mutation {
+  createDepartment(input: CreateDepartmentInput!): Department!
+  createSubDepartment(input: CreateSubDepartmentInput!): SubDepartment!
+  deleteDepartment(id: Int!): Boolean!
+  deleteSubDepartment(id: Int!): Boolean!
   login(input: LoginInput!): AuthResponse!
   logout: Boolean!
   register(input: RegisterInput!): AuthResponse!
+  updateDepartment(input: UpdateDepartmentInput!): Department!
+  updateSubDepartment(input: UpdateSubDepartmentInput!): SubDepartment!
 }
 
 type Query {
+  getDepartment(id: Int!): Department!
+  getDepartments: [Department!]!
+  getSubDepartment(id: Int!): SubDepartment!
+  getSubDepartments: [SubDepartment!]!
   hello: String!
 }
 
 input RegisterInput {
   password: String!
   username: String!
+}
+
+type SubDepartment {
+  department: Department
+  departmentId: Float!
+  name: String!
+}
+
+input SubDepartmentInput {
+  name: String!
+}
+
+input UpdateDepartmentInput {
+  id: Int!
+  name: String!
+}
+
+input UpdateSubDepartmentInput {
+  id: Int!
+  name: String!
 }
 
 type User {
