@@ -32,11 +32,9 @@ export function SubDepartmentList({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                  {subDept.name}
-                </h3>
+                <h3 className="font-semibold">{subDept.name}</h3>
                 {subDept.department && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     Department: {subDept.department.name}
                   </p>
                 )}
@@ -55,7 +53,7 @@ export function SubDepartmentList({
                   size="sm"
                   onClick={() => onDelete(subDept.id)}
                   disabled={isLoading}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
                   <FiTrash2 className="w-4 h-4" />
                 </Button>

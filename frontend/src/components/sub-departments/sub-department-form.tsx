@@ -54,17 +54,21 @@ export function SubDepartmentForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {!initialData && (
         <div className="w-full">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          <label className="block text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2">
             Department
           </label>
           <select
             className={`
-              w-full px-4 py-2.5 rounded-lg border transition-colors
-              bg-white dark:bg-gray-800
-              text-gray-900 dark:text-gray-100
-              border-gray-300 dark:border-gray-600
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              ${departmentIdError ? "border-red-500 focus:ring-red-500" : ""}
+              flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm
+              ring-offset-background
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+              disabled:cursor-not-allowed disabled:opacity-50
+              transition-colors
+              ${
+                departmentIdError
+                  ? "border-destructive focus-visible:ring-destructive"
+                  : ""
+              }
             `}
             {...register("departmentId", { valueAsNumber: true })}
           >

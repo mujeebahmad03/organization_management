@@ -58,21 +58,19 @@ export function DepartmentList({
                   {hasSubDepartments && (
                     <button
                       onClick={() => toggleExpand(department.id)}
-                      className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                      className="p-1 hover:bg-accent rounded"
                     >
                       {isExpanded ? (
-                        <FiChevronDown className="w-5 h-5 text-gray-500" />
+                        <FiChevronDown className="w-5 h-5 text-muted-foreground" />
                       ) : (
-                        <FiChevronRight className="w-5 h-5 text-gray-500" />
+                        <FiChevronRight className="w-5 h-5 text-muted-foreground" />
                       )}
                     </button>
                   )}
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                      {department.name}
-                    </h3>
+                    <h3 className="font-semibold">{department.name}</h3>
                     {hasSubDepartments && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      <p className="text-sm text-muted-foreground mt-1">
                         {subDepartments.length} sub-department
                         {subDepartments.length !== 1 ? "s" : ""}
                       </p>
@@ -93,7 +91,7 @@ export function DepartmentList({
                     size="sm"
                     onClick={() => onDelete(department.id)}
                     disabled={isLoading}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
                   >
                     <FiTrash2 className="w-4 h-4" />
                   </Button>
@@ -101,15 +99,13 @@ export function DepartmentList({
               </div>
 
               {isExpanded && hasSubDepartments && (
-                <div className="mt-4 ml-8 space-y-2 border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                <div className="mt-4 ml-8 space-y-2 border-l-2 border-border pl-4">
                   {subDepartments.map((subDept) => (
                     <div
                       key={subDept.id}
-                      className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+                      className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-lg"
                     >
-                      <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {subDept.name}
-                      </span>
+                      <span className="text-sm">{subDept.name}</span>
                     </div>
                   ))}
                 </div>

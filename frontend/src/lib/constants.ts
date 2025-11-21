@@ -1,7 +1,7 @@
 // API Configuration
 export const API_CONFIG = {
-  GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:3000/graphql",
-  REST_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+  GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:5050/graphql",
+  REST_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5050",
 } as const;
 
 // Cookie Configuration

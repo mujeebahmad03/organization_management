@@ -1,5 +1,3 @@
-import { UI_CONSTANTS } from "@/lib/constants";
-
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
   className?: string;
@@ -12,13 +10,15 @@ export function LoadingSpinner({
   fullScreen = false,
 }: LoadingSpinnerProps) {
   const sizeClasses = {
-    sm: UI_CONSTANTS.LOADING_SPINNER_SIZE.SM,
-    md: UI_CONSTANTS.LOADING_SPINNER_SIZE.MD,
-    lg: UI_CONSTANTS.LOADING_SPINNER_SIZE.LG,
+    sm: "h-8 w-8",
+    md: "h-12 w-12",
+    lg: "h-16 w-16",
   };
 
   const spinner = (
-    <div className={`animate-spin rounded-full border-b-2 ${UI_CONSTANTS.LOADING_SPINNER_COLOR} ${sizeClasses[size]} ${className}`} />
+    <div
+      className={`animate-spin rounded-full border-b-2 border-primary ${sizeClasses[size]} ${className}`}
+    />
   );
 
   if (fullScreen) {
@@ -29,10 +29,5 @@ export function LoadingSpinner({
     );
   }
 
-  return (
-    <div className="flex items-center justify-center h-64">
-      {spinner}
-    </div>
-  );
+  return <div className="flex items-center justify-center h-64">{spinner}</div>;
 }
-

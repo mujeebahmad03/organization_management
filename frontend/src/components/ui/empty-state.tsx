@@ -17,7 +17,7 @@ export function EmptyState({
   return (
     <Card className={className}>
       <CardContent className="py-12 text-center">
-        <p className="text-gray-500 dark:text-gray-400 mb-4">{message}</p>
+        <p className="text-muted-foreground mb-4">{message}</p>
         {actionLabel && onAction && (
           <Button variant="primary" onClick={onAction}>
             {actionLabel}
@@ -27,4 +27,3 @@ export function EmptyState({
     </Card>
   );
 }
-

@@ -44,21 +44,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Welcome Back</CardTitle>
-          <p className="text-center text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-center text-muted-foreground mt-2">
             Sign in to your account
           </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {error && (
-              <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                <p className="text-sm text-red-600 dark:text-red-400">
-                  {error}
-                </p>
+              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                <p className="text-sm text-destructive">{error}</p>
               </div>
             )}
 
@@ -88,11 +86,11 @@ export default function LoginPage() {
               Sign In
             </Button>
 
-            <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-center text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
               <Link
                 href={ROUTES.REGISTER}
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                className="text-primary hover:text-primary/80 font-medium"
               >
                 Sign up
               </Link>

@@ -14,11 +14,10 @@ export function ErrorMessage({
   return (
     <Card className={className}>
       <CardContent className="py-12 text-center">
-        <p className="text-red-600 dark:text-red-400">
+        <p className="text-destructive">
           {title}: {message}
         </p>
       </CardContent>
     </Card>
   );
 }
-
