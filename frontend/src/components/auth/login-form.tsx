@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { LoginFormData } from "@/lib/validations";
+import { ROUTES } from "@/lib/constants";
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
   onSubmit: (e: React.FormEvent) => void;
@@ -86,12 +87,9 @@ export function LoginForm({
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Logging in..." : "Login"}
                 </Button>
-                <Button variant="outline" type="button">
-                  Login with Google
-                </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
-                  <Link href="/auth/register">Sign up</Link>
+                  <Link href={ROUTES.REGISTER}>Sign up</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

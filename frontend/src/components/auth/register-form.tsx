@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { RegisterFormData } from "@/lib/validations";
+import { ROUTES } from "@/lib/constants";
 
 interface SignupFormProps extends React.ComponentProps<typeof Card> {
   onSubmit: (e: React.FormEvent) => void;
@@ -83,12 +84,9 @@ export function SignupForm({
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Creating account..." : "Create Account"}
                 </Button>
-                <Button variant="outline" type="button">
-                  Sign up with Google
-                </Button>
                 <FieldDescription className="px-6 text-center">
                   Already have an account?{" "}
-                  <Link href="/auth/login">Sign in</Link>
+                  <Link href={ROUTES.LOGIN}>Sign in</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
