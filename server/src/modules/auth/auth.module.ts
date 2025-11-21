@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './services/auth.service';
-import { AuthResolver } from './auth.resolver';
-import { JwtAuthService } from './services';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { User } from 'src/modules/users/entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthService } from './services';
+import { AuthResolver } from './auth.resolver';
+import { JwtAuthService } from './services';
+import { JwtStrategy } from './strategies';
+import { User } from 'src/modules/users/entities';
 import { UsersModule } from 'src/modules/users/users.module';
 import { AuthController } from './auth.controller';
+
 @Module({
   providers: [AuthResolver, AuthService, JwtAuthService, JwtStrategy],
   imports: [
