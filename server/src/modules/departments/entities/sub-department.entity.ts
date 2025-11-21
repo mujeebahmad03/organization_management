@@ -1,11 +1,30 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { ObjectType, Field } from '@nestjs/graphql';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Department } from './department.entity';
-import { BaseCoreEntity } from 'src/common/entities';
 
 @Entity('sub_departments')
 @ObjectType()
-export class SubDepartment extends BaseCoreEntity {
+export class SubDepartment {
+  @PrimaryGeneratedColumn()
+  @Field(() => Int)
+  id: number;
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
+
   @Column()
   @Field()
   name: string;

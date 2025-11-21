@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_DEPARTMENTS = gql`
   query GetDepartments {
@@ -29,4 +29,3 @@ export const GET_SUB_DEPARTMENTS = gql`
     }
   }
 `;
-
