@@ -1,22 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { FiEdit2, FiTrash2, FiChevronDown, FiChevronRight } from 'react-icons/fi';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-
-interface SubDepartment {
-  id: number;
-  name: string;
-  createdAt: string;
-}
-
-interface Department {
-  id: number;
-  name: string;
-  createdAt: string;
-  subDepartments?: SubDepartment[];
-}
+import { useState } from "react";
+import {
+  FiEdit2,
+  FiTrash2,
+  FiChevronDown,
+  FiChevronRight,
+} from "react-icons/fi";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import type { Department } from "@/lib/types";
 
 interface DepartmentListProps {
   departments: Department[];
@@ -45,13 +39,7 @@ export function DepartmentList({
 
   if (departments.length === 0) {
     return (
-      <Card>
-        <CardContent className="py-12 text-center">
-          <p className="text-gray-500 dark:text-gray-400">
-            No departments found. Create your first department to get started.
-          </p>
-        </CardContent>
-      </Card>
+      <EmptyState message="No departments found. Create your first department to get started." />
     );
   }
 
@@ -86,7 +74,7 @@ export function DepartmentList({
                     {hasSubDepartments && (
                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                         {subDepartments.length} sub-department
-                        {subDepartments.length !== 1 ? 's' : ''}
+                        {subDepartments.length !== 1 ? "s" : ""}
                       </p>
                     )}
                   </div>
@@ -133,4 +121,3 @@ export function DepartmentList({
     </div>
   );
 }
-

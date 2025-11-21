@@ -1,19 +1,22 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createSubDepartmentSchema,
   updateSubDepartmentSchema,
   type CreateSubDepartmentFormData,
   type UpdateSubDepartmentFormData,
-} from '@/lib/validations';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from "@/lib/validations";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import type { DepartmentOption } from "@/lib/types";
 
 interface SubDepartmentFormProps {
-  departments: Array<{ id: number; name: string }>;
-  onSubmit: (data: CreateSubDepartmentFormData | UpdateSubDepartmentFormData) => Promise<void>;
+  departments: DepartmentOption[];
+  onSubmit: (
+    data: CreateSubDepartmentFormData | UpdateSubDepartmentFormData
+  ) => Promise<void>;
   onCancel?: () => void;
   isLoading?: boolean;
   initialData?: UpdateSubDepartmentFormData;
@@ -26,7 +29,9 @@ export function SubDepartmentForm({
   isLoading = false,
   initialData,
 }: SubDepartmentFormProps) {
-  const schema = initialData ? updateSubDepartmentSchema : createSubDepartmentSchema;
+  const schema = initialData
+    ? updateSubDepartmentSchema
+    : createSubDepartmentSchema;
   const {
     register,
     handleSubmit,
@@ -35,7 +40,7 @@ export function SubDepartmentForm({
     resolver: zodResolver(schema),
     defaultValues: initialData || {
       departmentId: departments[0]?.id || 0,
-      name: '',
+      name: "",
     },
   });
 
@@ -53,9 +58,9 @@ export function SubDepartmentForm({
               text-gray-900 dark:text-gray-100
               border-gray-300 dark:border-gray-600
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              ${errors.departmentId ? 'border-red-500 focus:ring-red-500' : ''}
+              ${errors.departmentId ? "border-red-500 focus:ring-red-500" : ""}
             `}
-            {...register('departmentId', { valueAsNumber: true })}
+            {...register("departmentId", { valueAsNumber: true })}
           >
             {departments.map((dept) => (
               <option key={dept.id} value={dept.id}>
@@ -75,12 +80,17 @@ export function SubDepartmentForm({
         label="Sub-Department Name"
         placeholder="Enter sub-department name"
         error={errors.name?.message}
-        {...register('name')}
+        {...register("name")}
       />
 
       <div className="flex gap-3 pt-4">
-        <Button type="submit" variant="primary" isLoading={isLoading} className="flex-1">
-          {initialData ? 'Update Sub-Department' : 'Create Sub-Department'}
+        <Button
+          type="submit"
+          variant="primary"
+          isLoading={isLoading}
+          className="flex-1"
+        >
+          {initialData ? "Update Sub-Department" : "Create Sub-Department"}
         </Button>
         {onCancel && (
           <Button type="button" variant="secondary" onClick={onCancel}>
@@ -91,4 +101,3 @@ export function SubDepartmentForm({
     </form>
   );
 }
-

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/contexts/auth-context';
-import { Button } from '@/components/ui/button';
-import { FiLogOut, FiUser } from 'react-icons/fi';
+import { useAuth } from "@/contexts/auth-context";
+import { Button } from "@/components/ui/button";
+import { FiLogOut, FiUser } from "react-icons/fi";
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -31,4 +31,3 @@ export function Navbar() {
     </nav>
   );
 }
-

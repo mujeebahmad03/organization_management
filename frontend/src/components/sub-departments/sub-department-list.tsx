@@ -1,19 +1,10 @@
-'use client';
+"use client";
 
-import { FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-
-interface SubDepartment {
-  id: number;
-  name: string;
-  departmentId: number;
-  createdAt: string;
-  department?: {
-    id: number;
-    name: string;
-  };
-}
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import type { SubDepartment } from "@/lib/types";
 
 interface SubDepartmentListProps {
   subDepartments: SubDepartment[];
@@ -30,13 +21,7 @@ export function SubDepartmentList({
 }: SubDepartmentListProps) {
   if (subDepartments.length === 0) {
     return (
-      <Card>
-        <CardContent className="py-12 text-center">
-          <p className="text-gray-500 dark:text-gray-400">
-            No sub-departments found. Create your first sub-department to get started.
-          </p>
-        </CardContent>
-      </Card>
+      <EmptyState message="No sub-departments found. Create your first sub-department to get started." />
     );
   }
 
@@ -82,4 +67,3 @@ export function SubDepartmentList({
     </div>
   );
 }
-

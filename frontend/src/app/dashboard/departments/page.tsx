@@ -1,107 +1,99 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_DEPARTMENTS } from '@/lib/graphql/queries';
+import { useQuery } from "@apollo/client/react";
+import { FiPlus } from "react-icons/fi";
+import { GET_DEPARTMENTS } from "@/lib/graphql/queries";
 import {
   CREATE_DEPARTMENT,
   UPDATE_DEPARTMENT,
   DELETE_DEPARTMENT,
-} from '@/lib/graphql/mutations';
-import { DepartmentForm } from '@/components/departments/department-form';
-import { UpdateDepartmentForm } from '@/components/departments/update-department-form';
-import { DepartmentList } from '@/components/departments/department-list';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FiPlus, FiX } from 'react-icons/fi';
-import type { CreateDepartmentFormData, UpdateDepartmentFormData } from '@/lib/validations';
+} from "@/lib/graphql/mutations";
+import { DepartmentForm } from "@/components/departments/department-form";
+import { UpdateDepartmentForm } from "@/components/departments/update-department-form";
+import { DepartmentList } from "@/components/departments/department-list";
+import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { ErrorMessage } from "@/components/ui/error-message";
+import { FormModal } from "@/components/ui/form-modal";
+import { useFormModal } from "@/hooks/use-form-modal";
+import { useMutationHandler } from "@/hooks/use-mutation-handler";
+import type {
+  CreateDepartmentFormData,
+  UpdateDepartmentFormData,
+} from "@/lib/validations";
+import type {
+  GetDepartmentsQuery,
+  EditingEntity,
+  Department,
+} from "@/lib/types";
+import { CONFIRM_MESSAGES } from "@/lib/constants";
 
 export default function DepartmentsPage() {
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingDepartment, setEditingDepartment] = useState<{
-    id: number;
-    name: string;
-  } | null>(null);
+  const {
+    showCreateForm,
+    editingEntity,
+    openCreateForm,
+    closeCreateForm,
+    openEditForm,
+    closeEditForm,
+  } = useFormModal<EditingEntity>();
 
-  const { data, loading, error, refetch } = useQuery(GET_DEPARTMENTS);
+  const { data, loading, error, refetch } =
+    useQuery<GetDepartmentsQuery>(GET_DEPARTMENTS);
 
-  const [createDepartment, { loading: creating }] = useMutation(CREATE_DEPARTMENT, {
-    onCompleted: () => {
-      setShowCreateForm(false);
-      refetch();
-    },
-    onError: (error) => {
-      alert(`Error creating department: ${error.message}`);
-    },
+  const { execute: createDepartment, loading: creating } = useMutationHandler({
+    mutation: CREATE_DEPARTMENT,
+    onSuccess: () => closeCreateForm(),
+    refetch,
+    errorMessage: "Error creating department",
   });
 
-  const [updateDepartment, { loading: updating }] = useMutation(UPDATE_DEPARTMENT, {
-    onCompleted: () => {
-      setEditingDepartment(null);
-      refetch();
-    },
-    onError: (error) => {
-      alert(`Error updating department: ${error.message}`);
-    },
+  const { execute: updateDepartment, loading: updating } = useMutationHandler({
+    mutation: UPDATE_DEPARTMENT,
+    onSuccess: () => closeEditForm(),
+    refetch,
+    errorMessage: "Error updating department",
   });
 
-  const [deleteDepartment, { loading: deleting }] = useMutation(DELETE_DEPARTMENT, {
-    onCompleted: () => {
-      refetch();
-    },
-    onError: (error) => {
-      alert(`Error deleting department: ${error.message}`);
-    },
+  const { execute: deleteDepartment, loading: deleting } = useMutationHandler({
+    mutation: DELETE_DEPARTMENT,
+    refetch,
+    errorMessage: "Error deleting department",
   });
 
   const handleCreate = async (data: CreateDepartmentFormData) => {
     await createDepartment({
-      variables: {
-        input: {
-          name: data.name,
-          subDepartments: data.subDepartments?.filter((sd) => sd.name.trim()) || null,
-        },
+      input: {
+        name: data.name,
+        subDepartments:
+          data.subDepartments?.filter((sd) => sd.name.trim()) || null,
       },
     });
   };
 
   const handleUpdate = async (data: UpdateDepartmentFormData) => {
     await updateDepartment({
-      variables: {
-        input: {
-          id: data.id,
-          name: data.name,
-        },
+      input: {
+        id: data.id,
+        name: data.name,
       },
     });
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this department? This will also delete all sub-departments.')) {
+    if (!confirm(CONFIRM_MESSAGES.DELETE_DEPARTMENT)) {
       return;
     }
-    await deleteDepartment({
-      variables: { id },
-    });
+    await deleteDepartment({ id });
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
     return (
-      <Card>
-        <CardContent className="py-12 text-center">
-          <p className="text-red-600 dark:text-red-400">
-            Error loading departments: {error.message}
-          </p>
-        </CardContent>
-      </Card>
+      <ErrorMessage message={error.message} title="Error loading departments" />
     );
   }
 
@@ -110,11 +102,13 @@ export default function DepartmentsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Departments</h1>
-        {!showCreateForm && !editingDepartment && (
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          Departments
+        </h1>
+        {!showCreateForm && !editingEntity && (
           <Button
             variant="primary"
-            onClick={() => setShowCreateForm(true)}
+            onClick={openCreateForm}
             disabled={creating}
           >
             <FiPlus className="w-4 h-4 mr-2" />
@@ -123,55 +117,42 @@ export default function DepartmentsPage() {
         )}
       </div>
 
-      {showCreateForm && (
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Create New Department</CardTitle>
-              <Button variant="ghost" size="sm" onClick={() => setShowCreateForm(false)}>
-                <FiX className="w-4 h-4" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <DepartmentForm
-              onSubmit={handleCreate}
-              onCancel={() => setShowCreateForm(false)}
-              isLoading={creating}
-            />
-          </CardContent>
-        </Card>
-      )}
+      <FormModal
+        title="Create New Department"
+        isOpen={showCreateForm}
+        onClose={closeCreateForm}
+      >
+        <DepartmentForm
+          onSubmit={handleCreate}
+          onCancel={closeCreateForm}
+          isLoading={creating}
+        />
+      </FormModal>
 
-      {editingDepartment && (
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Update Department</CardTitle>
-              <Button variant="ghost" size="sm" onClick={() => setEditingDepartment(null)}>
-                <FiX className="w-4 h-4" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <UpdateDepartmentForm
-              departmentId={editingDepartment.id}
-              currentName={editingDepartment.name}
-              onSubmit={handleUpdate}
-              onCancel={() => setEditingDepartment(null)}
-              isLoading={updating}
-            />
-          </CardContent>
-        </Card>
-      )}
+      <FormModal
+        title="Update Department"
+        isOpen={!!editingEntity}
+        onClose={closeEditForm}
+      >
+        {editingEntity && (
+          <UpdateDepartmentForm
+            departmentId={editingEntity.id}
+            currentName={editingEntity.name}
+            onSubmit={handleUpdate}
+            onCancel={closeEditForm}
+            isLoading={updating}
+          />
+        )}
+      </FormModal>
 
       <DepartmentList
         departments={departments}
-        onEdit={(dept) => setEditingDepartment({ id: dept.id, name: dept.name })}
+        onEdit={(dept: Department) =>
+          openEditForm({ id: dept.id, name: dept.name })
+        }
         onDelete={handleDelete}
         isLoading={deleting}
       />
     </div>
   );
 }
-

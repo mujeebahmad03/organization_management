@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { loginSchema, type LoginFormData } from '@/lib/validations';
-import { useAuth } from '@/contexts/auth-context';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { loginSchema, type LoginFormData } from "@/lib/validations";
+import { useAuth } from "@/contexts/auth-context";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { ROUTES, ERROR_MESSAGES } from "@/lib/constants";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/dashboard');
+      router.push(ROUTES.DASHBOARD);
     }
   }, [isAuthenticated, router]);
 
@@ -34,9 +35,11 @@ export default function LoginPage() {
     try {
       setError(null);
       await login(data.username, data.password);
-      router.push('/dashboard');
+      router.push(ROUTES.DASHBOARD);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+      setError(
+        err instanceof Error ? err.message : ERROR_MESSAGES.LOGIN_FAILED
+      );
     }
   };
 
@@ -53,7 +56,9 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {error && (
               <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {error}
+                </p>
               </div>
             )}
 
@@ -62,7 +67,7 @@ export default function LoginPage() {
               type="text"
               placeholder="Enter your username"
               error={errors.username?.message}
-              {...register('username')}
+              {...register("username")}
             />
 
             <Input
@@ -70,7 +75,7 @@ export default function LoginPage() {
               type="password"
               placeholder="Enter your password"
               error={errors.password?.message}
-              {...register('password')}
+              {...register("password")}
             />
 
             <Button
@@ -84,9 +89,9 @@ export default function LoginPage() {
             </Button>
 
             <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{" "}
               <Link
-                href="/register"
+                href={ROUTES.REGISTER}
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
               >
                 Sign up
@@ -98,4 +103,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

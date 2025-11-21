@@ -1,10 +1,13 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { updateDepartmentSchema, type UpdateDepartmentFormData } from '@/lib/validations';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  updateDepartmentSchema,
+  type UpdateDepartmentFormData,
+} from "@/lib/validations";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface UpdateDepartmentFormProps {
   departmentId: number;
@@ -39,11 +42,16 @@ export function UpdateDepartmentForm({
         label="Department Name"
         placeholder="Enter department name"
         error={errors.name?.message}
-        {...register('name')}
+        {...register("name")}
       />
 
       <div className="flex gap-3 pt-4">
-        <Button type="submit" variant="primary" isLoading={isLoading} className="flex-1">
+        <Button
+          type="submit"
+          variant="primary"
+          isLoading={isLoading}
+          className="flex-1"
+        >
           Update Department
         </Button>
         <Button type="button" variant="secondary" onClick={onCancel}>
@@ -53,4 +61,3 @@ export function UpdateDepartmentForm({
     </form>
   );
 }
-

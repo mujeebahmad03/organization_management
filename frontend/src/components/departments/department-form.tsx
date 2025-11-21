@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
-import { useForm, useFieldArray } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createDepartmentSchema, type CreateDepartmentFormData } from '@/lib/validations';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { FiPlus, FiX } from 'react-icons/fi';
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  createDepartmentSchema,
+  type CreateDepartmentFormData,
+} from "@/lib/validations";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { FiPlus, FiX } from "react-icons/fi";
 
 interface DepartmentFormProps {
   onSubmit: (data: CreateDepartmentFormData) => Promise<void>;
@@ -28,14 +31,14 @@ export function DepartmentForm({
   } = useForm<CreateDepartmentFormData>({
     resolver: zodResolver(createDepartmentSchema),
     defaultValues: initialData || {
-      name: '',
+      name: "",
       subDepartments: [],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'subDepartments',
+    name: "subDepartments",
   });
 
   return (
@@ -44,7 +47,7 @@ export function DepartmentForm({
         label="Department Name"
         placeholder="Enter department name"
         error={errors.name?.message}
-        {...register('name')}
+        {...register("name")}
       />
 
       <div>
@@ -56,7 +59,7 @@ export function DepartmentForm({
             type="button"
             variant="ghost"
             size="sm"
-            onClick={() => append({ name: '' })}
+            onClick={() => append({ name: "" })}
           >
             <FiPlus className="w-4 h-4 mr-1" />
             Add Sub-Department
@@ -77,7 +80,7 @@ export function DepartmentForm({
                   variant="ghost"
                   size="sm"
                   onClick={() => remove(index)}
-                  className="flex-shrink-0"
+                  className="shrink-0"
                 >
                   <FiX className="w-4 h-4" />
                 </Button>
@@ -88,8 +91,13 @@ export function DepartmentForm({
       </div>
 
       <div className="flex gap-3 pt-4">
-        <Button type="submit" variant="primary" isLoading={isLoading} className="flex-1">
-          {initialData ? 'Update Department' : 'Create Department'}
+        <Button
+          type="submit"
+          variant="primary"
+          isLoading={isLoading}
+          className="flex-1"
+        >
+          {initialData ? "Update Department" : "Create Department"}
         </Button>
         {onCancel && (
           <Button type="button" variant="secondary" onClick={onCancel}>
@@ -100,4 +108,3 @@ export function DepartmentForm({
     </form>
   );
 }
-

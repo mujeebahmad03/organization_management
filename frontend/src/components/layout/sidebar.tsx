@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { FiLayout, FiLayers, FiHome } from 'react-icons/fi';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FiLayout, FiLayers, FiHome } from "react-icons/fi";
+import { ROUTES } from "@/lib/constants";
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: FiHome },
-  { name: 'Departments', href: '/dashboard/departments', icon: FiLayout },
-  { name: 'Sub-Departments', href: '/dashboard/sub-departments', icon: FiLayers },
+  { name: "Dashboard", href: ROUTES.DASHBOARD, icon: FiHome },
+  { name: "Departments", href: ROUTES.DEPARTMENTS, icon: FiLayout },
+  {
+    name: "Sub-Departments",
+    href: ROUTES.SUB_DEPARTMENTS,
+    icon: FiLayers,
+  },
 ];
 
 export function Sidebar() {
@@ -27,8 +32,8 @@ export function Sidebar() {
                 flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
                 ${
                   isActive
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }
               `}
             >
@@ -41,4 +46,3 @@ export function Sidebar() {
     </aside>
   );
 }
-

@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
 }
 
-export function Input({ label, error, className = '', ...props }: InputProps) {
+export function Input({ label, error, className = "", ...props }: InputProps) {
   return (
     <div className="w-full">
       {label && (
@@ -21,7 +21,7 @@ export function Input({ label, error, className = '', ...props }: InputProps) {
           border-gray-300 dark:border-gray-600
           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
           placeholder:text-gray-400 dark:placeholder:text-gray-500
-          ${error ? 'border-red-500 focus:ring-red-500' : ''}
+          ${error ? "border-red-500 focus:ring-red-500" : ""}
           ${className}
         `}
         {...props}
@@ -32,4 +32,3 @@ export function Input({ label, error, className = '', ...props }: InputProps) {
     </div>
   );
 }
-

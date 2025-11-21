@@ -1,18 +1,19 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import { apolloClient } from '@/lib/apollo-client';
-import { restClient } from '@/lib/rest-client';
-import { LOGOUT } from '@/lib/graphql/mutations';
-
-interface User {
-  id: number;
-  username: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { apolloClient } from "@/lib/apollo-client";
+import { restClient } from "@/lib/rest-client";
+import { LOGOUT } from "@/lib/graphql/mutations";
+import { COOKIE_CONFIG, ROUTES } from "@/lib/constants";
+import type { User } from "@/lib/types";
 
 interface AuthContextType {
   user: User | null;
@@ -33,17 +34,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const storedToken = Cookies.get('authToken');
-    const storedUser = Cookies.get('user');
+    const storedToken = Cookies.get(COOKIE_CONFIG.AUTH_TOKEN);
+    const storedUser = Cookies.get(COOKIE_CONFIG.USER);
 
     if (storedToken && storedUser) {
       try {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
       } catch (error) {
-        console.error('Error parsing stored user:', error);
-        Cookies.remove('authToken');
-        Cookies.remove('user');
+        console.error("Error parsing stored user:", error);
+        Cookies.remove(COOKIE_CONFIG.AUTH_TOKEN);
+        Cookies.remove(COOKIE_CONFIG.USER);
       }
     }
     setLoading(false);
@@ -54,8 +55,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await restClient.login({ username, password });
       setToken(response.accessToken);
       setUser(response.user);
-      Cookies.set('authToken', response.accessToken, { expires: 7 }); // 7 days
-      Cookies.set('user', JSON.stringify(response.user), { expires: 7 });
+      Cookies.set(COOKIE_CONFIG.AUTH_TOKEN, response.accessToken, {
+        expires: COOKIE_CONFIG.EXPIRES_DAYS,
+      });
+      Cookies.set(COOKIE_CONFIG.USER, JSON.stringify(response.user), {
+        expires: COOKIE_CONFIG.EXPIRES_DAYS,
+      });
     } catch (error) {
       throw error;
     }
@@ -66,8 +71,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await restClient.register({ username, password });
       setToken(response.accessToken);
       setUser(response.user);
-      Cookies.set('authToken', response.accessToken, { expires: 7 });
-      Cookies.set('user', JSON.stringify(response.user), { expires: 7 });
+      Cookies.set(COOKIE_CONFIG.AUTH_TOKEN, response.accessToken, {
+        expires: COOKIE_CONFIG.EXPIRES_DAYS,
+      });
+      Cookies.set(COOKIE_CONFIG.USER, JSON.stringify(response.user), {
+        expires: COOKIE_CONFIG.EXPIRES_DAYS,
+      });
     } catch (error) {
       throw error;
     }
@@ -81,14 +90,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
       }
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       setToken(null);
       setUser(null);
-      Cookies.remove('authToken');
-      Cookies.remove('user');
+      Cookies.remove(COOKIE_CONFIG.AUTH_TOKEN);
+      Cookies.remove(COOKIE_CONFIG.USER);
       apolloClient.clearStore();
-      router.push('/login');
+      router.push(ROUTES.LOGIN);
     }
   }, [token, router]);
 
@@ -112,8 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
-

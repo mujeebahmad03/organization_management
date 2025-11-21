@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { registerSchema, type RegisterFormData } from '@/lib/validations';
-import { useAuth } from '@/contexts/auth-context';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { registerSchema, type RegisterFormData } from "@/lib/validations";
+import { useAuth } from "@/contexts/auth-context";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { ROUTES, ERROR_MESSAGES } from "@/lib/constants";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/dashboard');
+      router.push(ROUTES.DASHBOARD);
     }
   }, [isAuthenticated, router]);
 
@@ -34,14 +35,16 @@ export default function RegisterPage() {
     try {
       setError(null);
       await registerUser(data.username, data.password);
-      router.push('/dashboard');
+      router.push(ROUTES.DASHBOARD);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed. Please try again.');
+      setError(
+        err instanceof Error ? err.message : ERROR_MESSAGES.REGISTRATION_FAILED
+      );
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Create Account</CardTitle>
@@ -53,7 +56,9 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {error && (
               <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {error}
+                </p>
               </div>
             )}
 
@@ -62,7 +67,7 @@ export default function RegisterPage() {
               type="text"
               placeholder="Choose a username (min 3 characters)"
               error={errors.username?.message}
-              {...register('username')}
+              {...register("username")}
             />
 
             <Input
@@ -70,7 +75,7 @@ export default function RegisterPage() {
               type="password"
               placeholder="Choose a password (min 6 characters)"
               error={errors.password?.message}
-              {...register('password')}
+              {...register("password")}
             />
 
             <Button
@@ -84,9 +89,9 @@ export default function RegisterPage() {
             </Button>
 
             <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <Link
-                href="/login"
+                href={ROUTES.LOGIN}
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
               >
                 Sign in
@@ -98,4 +103,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
