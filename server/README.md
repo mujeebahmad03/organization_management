@@ -1,98 +1,349 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Organization Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A GraphQL-based API for managing organizational departments and sub-departments, built with NestJS, TypeScript, and PostgreSQL. This project handles user authentication, department hierarchies, and implements various security best practices.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **GraphQL API** - Flexible querying with auto-generated schema
+- **JWT Authentication** - Secure token-based authentication system
+- **Department Management** - Full CRUD operations for departments and sub-departments
+- **Authorization** - Creator-based access control (only creators can modify their resources)
+- **Rate Limiting** - Global rate limiting to prevent DoS attacks
+- **Input Validation** - Comprehensive validation with sanitization
+- **TypeORM** - Database migrations and type-safe queries
+- **Security** - Helmet, CORS configuration, and production-ready security settings
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **API**: GraphQL (Apollo Server)
+- **Authentication**: JWT with Passport
+- **Validation**: class-validator, class-transformer
+- **Logging**: Pino
+- **Security**: Helmet, Throttler
 
+## Prerequisites
+
+Before you start, make sure you have:
+
+- Node.js (v22 or higher)
+- PostgreSQL database
+- npm or yarn
+
+## Installation
+
+1. Clone the repository and navigate to the server directory:
 ```bash
-$ npm install
+cd server
 ```
 
-## Compile and run the project
-
+2. Install dependencies:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+3. Set up your environment variables. Create a `.env` file in the server directory:
+```env
+# Database
+DATABASE_URL=postgresql://username:password@localhost:5432/organization_db
 
-```bash
-# unit tests
-$ npm run test
+# JWT Configuration
+JWT_SECRET=your-secret-key-here
+JWT_EXPIRES_IN=3600
 
-# e2e tests
-$ npm run test:e2e
+# App Configuration
+NODE_ENV=development
+PORT=3000
 
-# test coverage
-$ npm run test:cov
+# Rate Limiting (optional - defaults shown)
+THROTTLE_TTL=60000
+THROTTLE_LIMIT=10
+
+# CORS (for production - comma-separated origins)
+CORS_ORIGINS=http://localhost:3000,https://yourdomain.com
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+4. Run database migrations:
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run migration:run
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Running the Application
 
-## Resources
+```bash
+# Development mode with hot reload
+npm run start:dev
 
-Check out a few resources that may come in handy when working with NestJS:
+# Production build
+npm run build
+npm run start:prod
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Once running, you can access:
+- **GraphQL Playground**: http://localhost:3000/graphql (development only)
+- **Swagger Docs**: http://localhost:3000/docs
 
-## Support
+## Project Structure
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+src/
+├── common/              # Shared utilities
+│   ├── decorators/     # Custom decorators (@CurrentUser, @Public, validation decorators)
+│   ├── guards/         # Authentication and rate limiting guards
+│   ├── filters/        # Exception filters
+│   ├── interceptors/   # Logging interceptor
+│   └── dto/            # Shared DTOs
+├── config/             # Configuration modules
+├── database/           # Database setup and migrations
+├── modules/
+│   ├── auth/          # Authentication module
+│   ├── users/         # User management
+│   └── departments/   # Department CRUD operations
+└── main.ts            # Application entry point
+```
 
-## Stay in touch
+## API Overview
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Authentication
+
+The API uses JWT authentication. Most endpoints require a valid token in the Authorization header:
+```
+Authorization: Bearer <your-token>
+```
+
+Public endpoints (registration and login) don't require authentication.
+
+### REST API Endpoints
+
+#### Authentication
+
+**POST `/auth/register`** - Register a new user
+
+Creates a new user account and returns JWT token.
+
+Request body:
+```json
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+Response (201 Created):
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+Validation rules:
+- `username`: Required, minimum 3 characters
+- `password`: Required, minimum 6 characters
+
+---
+
+**POST `/auth/login`** - Authenticate and get JWT token
+
+Authenticates a user and returns JWT access token.
+
+Request body:
+```json
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+Response (200 OK):
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+Error responses:
+- `401 Unauthorized` - Invalid credentials
+- `400 Bad Request` - Validation errors
+
+---
+
+### GraphQL Operations
+
+#### Departments
+- `createDepartment(input: CreateDepartmentInput!)` - Create a department (with optional sub-departments)
+- `getDepartments` - Get all departments with their sub-departments
+- `getDepartment(id: Int!)` - Get a single department by ID
+- `updateDepartment(input: UpdateDepartmentInput!)` - Update department name (creator only)
+- `deleteDepartment(id: Int!)` - Delete a department and all sub-departments (creator only)
+
+#### Sub-Departments
+- `createSubDepartment(input: CreateSubDepartmentInput!)` - Create a sub-department
+- `getSubDepartments` - Get all sub-departments
+- `getSubDepartment(id: Int!)` - Get a single sub-department by ID
+- `updateSubDepartment(input: UpdateSubDepartmentInput!)` - Update sub-department name
+- `deleteSubDepartment(id: Int!)` - Delete a sub-department
+
+### Example REST API Usage
+
+**Register a new user:**
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "password": "securepassword123"
+  }'
+```
+
+**Login and get token:**
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "password": "securepassword123"
+  }'
+```
+
+**Use token for authenticated requests:**
+```bash
+curl -X POST http://localhost:3000/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-token>" \
+  -d '{
+    "query": "query { getDepartments { id name } }"
+  }'
+```
+
+### Example GraphQL Queries
+
+**Create a department:**
+```graphql
+mutation {
+  createDepartment(input: {
+    name: "Engineering"
+    subDepartments: [
+      { name: "Backend" }
+      { name: "Frontend" }
+    ]
+  }) {
+    id
+    name
+    subDepartments {
+      id
+      name
+    }
+  }
+}
+```
+
+**Get all departments:**
+```graphql
+query {
+  getDepartments {
+    id
+    name
+    createdAt
+    subDepartments {
+      id
+      name
+    }
+  }
+}
+```
+
+## Security Features
+
+### Authentication & Authorization
+- JWT-based authentication
+- Creator-only resource modification
+- Type-safe user context via `@CurrentUser` decorator
+
+### Rate Limiting
+- Global rate limiting (default: 10 requests per minute)
+- Configurable via `THROTTLE_TTL` and `THROTTLE_LIMIT` environment variables
+- Protects against DoS and brute force attacks
+
+### Input Validation
+- All inputs validated and sanitized
+- Name fields: 2-100 characters, alphanumeric + spaces/hyphens/underscores
+- ID validation: positive integers only
+- Automatic whitespace trimming
+
+### Production Security
+- Helmet for HTTP security headers
+- CORS configured with origin whitelisting
+- GraphQL playground and introspection disabled in production
+- Generic error messages to prevent information leakage
+
+## Database Migrations
+
+```bash
+# Generate a new migration
+npm run migration:generate -- src/database/migrations/MigrationName
+
+# Run pending migrations
+npm run migration:run
+
+# Revert last migration
+npm run migration:revert
+```
+
+## Development
+
+```bash
+# Format code
+npm run format
+
+# Lint code
+npm run lint
+
+# Run tests
+npm run test
+
+# Run tests with coverage
+npm run test:cov
+
+# E2E tests
+npm run test:e2e
+```
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | Required |
+| `JWT_SECRET` | Secret key for JWT tokens | Required |
+| `JWT_EXPIRES_IN` | Token expiration in seconds | Required |
+| `NODE_ENV` | Environment (development/production) | `development` |
+| `PORT` | Server port | `3000` |
+| `THROTTLE_TTL` | Rate limit window (ms) | `60000` |
+| `THROTTLE_LIMIT` | Max requests per window | `10` |
+| `CORS_ORIGINS` | Allowed origins (comma-separated) | All (dev) |
+
+## Notes
+
+- The API uses GraphQL, so you can query exactly the fields you need
+- All department mutations require authentication
+- Only the creator of a department can update/delete it
+- Sub-departments inherit permissions from their parent department
+- Rate limiting is applied globally to all endpoints
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is private and unlicensed.
