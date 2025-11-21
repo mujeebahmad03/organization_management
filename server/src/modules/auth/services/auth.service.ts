@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { User } from 'src/modules/users/entities';
 import { JwtAuthService } from './jwt-auth.service';
+import { TokenBlacklistService } from './token-blacklist.service';
 import { RegisterInput, LoginInput, AuthResponse } from '../dto';
 import { UsersService } from 'src/modules/users/users.service';
 
@@ -10,6 +11,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtAuthService: JwtAuthService,
+    private readonly tokenBlacklistService: TokenBlacklistService,
   ) {}
 
   async register(input: RegisterInput): Promise<AuthResponse> {
@@ -58,11 +60,9 @@ export class AuthService {
     };
   }
 
-  logout(): boolean {
-    // For JWT-based auth, logout is typically handled client-side
-    // by removing the token from storage
-    // If you need server-side token invalidation, you'd need to implement
-    // a token blacklist (Redis) or use refresh token rotation
+  async logout(token: string): Promise<boolean> {
+    // Add token to blacklist to prevent further use
+    await this.tokenBlacklistService.addToBlacklist(token);
     return true;
   }
 }

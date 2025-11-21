@@ -1,5 +1,20 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import type { Request } from 'express';
 import { LoginInput } from './dto/login.dto';
 import { AuthResponse } from './dto/auth-response.dto';
 import { AuthService } from './services';
@@ -133,5 +148,40 @@ export class AuthController {
   })
   async login(@Body() loginInput: LoginInput): Promise<AuthResponse> {
     return this.authService.login(loginInput);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'User logout',
+    description:
+      'Logout the current user by invalidating their JWT token. The token will be added to a blacklist and cannot be used again.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Logout successful. Token has been invalidated.',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No token provided',
+  })
+  async logout(@Req() req: Request): Promise<{ success: boolean }> {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new UnauthorizedException('No token provided');
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    await this.authService.logout(token);
+
+    return { success: true };
   }
 }

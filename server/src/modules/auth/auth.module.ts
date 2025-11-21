@@ -6,13 +6,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './services';
 import { AuthResolver } from './auth.resolver';
 import { JwtAuthService } from './services';
+import { TokenBlacklistService } from './services/token-blacklist.service';
 import { JwtStrategy } from './strategies';
 import { User } from 'src/modules/users/entities';
+import { TokenBlacklist } from './entities/token-blacklist.entity';
 import { UsersModule } from 'src/modules/users/users.module';
 import { AuthController } from './auth.controller';
 
 @Module({
-  providers: [AuthResolver, AuthService, JwtAuthService, JwtStrategy],
+  providers: [
+    AuthResolver,
+    AuthService,
+    JwtAuthService,
+    TokenBlacklistService,
+    JwtStrategy,
+  ],
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
@@ -26,9 +34,10 @@ import { AuthController } from './auth.controller';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, TokenBlacklist]),
     UsersModule,
   ],
   controllers: [AuthController],
+  exports: [TokenBlacklistService],
 })
 export class AuthModule {}

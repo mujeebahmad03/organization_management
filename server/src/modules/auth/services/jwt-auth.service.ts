@@ -27,8 +27,10 @@ export class JwtAuthService {
       }),
     ]);
 
-    return {
-      accessToken,
-    };
+    return { accessToken };
+  }
+
+  async decodeToken(token: string): Promise<JwtPayload> {
+    return this.jwtService.decode(token);
   }
 }

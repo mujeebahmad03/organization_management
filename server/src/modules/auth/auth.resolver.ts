@@ -1,7 +1,8 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthService } from './services/auth.service';
 import { RegisterInput, LoginInput, AuthResponse } from './dto';
 import { Public } from 'src/common/decorators';
+import type { GraphQLContext } from 'src/common/interface';
 
 @Resolver()
 export class AuthResolver {
@@ -20,7 +21,14 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
-  logout(): boolean {
-    return this.authService.logout();
+  async logout(@Context() context: GraphQLContext): Promise<boolean> {
+    const authHeader = context.req.headers.authorization;
+    const token = authHeader?.replace('Bearer ', '');
+
+    if (!token) {
+      return false;
+    }
+
+    return this.authService.logout(token);
   }
 }
