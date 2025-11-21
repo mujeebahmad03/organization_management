@@ -4,6 +4,7 @@ export interface SubDepartment {
   id: number;
   name: string;
   createdAt: string;
+  updatedAt: string;
   departmentId?: number;
   department?: {
     id: number;
@@ -15,6 +16,7 @@ export interface Department {
   id: number;
   name: string;
   createdAt: string;
+  updatedAt: string;
   subDepartments?: SubDepartment[];
 }
 

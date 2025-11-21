@@ -41,36 +41,7 @@ export default function DashboardPage() {
 
   // Department Handlers
   const handleCreateDepartment = async (values: DepartmentFormValues) => {
-    try {
-      // Create the department
-      await handlers.handleCreateDepartment(values);
-
-      // If there are sub-departments, create them after the department is created
-      if (values.subDepartments && values.subDepartments.length > 0) {
-        // Wait a bit for the department to be created, then refetch
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // Refetch to get the new department ID
-        const result = await refetch();
-        const newDepartment = result.data?.getDepartments.find(
-          (dept) => dept.name === values.name
-        );
-
-        if (newDepartment) {
-          // Create all sub-departments
-          for (const subDept of values.subDepartments) {
-            if (subDept.name.trim()) {
-              await handlers.handleCreateSubDepartment(
-                { name: subDept.name },
-                newDepartment.id
-              );
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error creating department with sub-departments:", error);
-    }
+    await handlers.handleCreateDepartment(values);
   };
 
   const handleUpdateDepartment = async (values: DepartmentFormValues) => {

@@ -6,10 +6,12 @@ export const CREATE_DEPARTMENT = gql`
       id
       name
       createdAt
+      updatedAt
       subDepartments {
         id
         name
         createdAt
+        updatedAt
       }
     }
   }
@@ -21,6 +23,7 @@ export const UPDATE_DEPARTMENT = gql`
       id
       name
       createdAt
+      updatedAt
     }
   }
 `;
@@ -38,6 +41,7 @@ export const CREATE_SUB_DEPARTMENT = gql`
       name
       departmentId
       createdAt
+      updatedAt
       department {
         id
         name
@@ -53,6 +57,7 @@ export const UPDATE_SUB_DEPARTMENT = gql`
       name
       departmentId
       createdAt
+      updatedAt
     }
   }
 `;

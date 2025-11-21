@@ -6,10 +6,12 @@ export const GET_DEPARTMENTS = gql`
       id
       name
       createdAt
+      updatedAt
       subDepartments {
         id
         name
         createdAt
+        updatedAt
       }
     }
   }

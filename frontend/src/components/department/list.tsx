@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { format } from "date-fns";
 import {
   MoreHorizontal,
   Edit2,
@@ -33,7 +34,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import type { Department, SubDepartment } from "@/lib/types";
-import { format } from "date-fns";
 
 interface DepartmentListProps {
   departments: Department[];
@@ -191,8 +191,8 @@ export function DepartmentList({
           </TableHeader>
           <TableBody>
             {departments.map((dept) => (
-              <>
-                <TableRow key={dept.id} className="group hover:bg-muted/40">
+              <Fragment key={dept.id}>
+                <TableRow className="group hover:bg-muted/40">
                   <TableCell>
                     {dept.subDepartments && dept.subDepartments.length > 0 && (
                       <Button
@@ -224,7 +224,7 @@ export function DepartmentList({
                     {format(new Date(dept.createdAt), "MMM d, yyyy")}
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm">
-                    {format(new Date(dept.createdAt), "MMM d, yyyy")}
+                    {format(new Date(dept.updatedAt), "MMM d, yyyy")}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -328,7 +328,7 @@ export function DepartmentList({
                       </TableCell>
                     </TableRow>
                   )}
-              </>
+              </Fragment>
             ))}
           </TableBody>
         </Table>

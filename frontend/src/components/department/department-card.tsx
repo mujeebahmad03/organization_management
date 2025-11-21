@@ -183,7 +183,7 @@ export function DepartmentCard({
       </CardContent>
       <CardFooter className="border-t bg-muted/10 px-6 py-3">
         <div className="text-xs text-muted-foreground">
-          Last updated: {format(new Date(department.createdAt), "PP")}
+          Last updated: {format(new Date(department.updatedAt), "PP")}
         </div>
       </CardFooter>
     </Card>

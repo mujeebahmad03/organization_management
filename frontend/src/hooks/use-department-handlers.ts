@@ -7,13 +7,11 @@ import type { DepartmentFormValues } from "@/components/department/form/departme
 interface UseDepartmentHandlersProps {
   onDeptSuccess?: () => void;
   onSubDeptSuccess?: () => void;
-  onDepartmentCreated?: (deptId: number) => void;
 }
 
 export function useDepartmentHandlers({
   onDeptSuccess,
   onSubDeptSuccess,
-  onDepartmentCreated,
 }: UseDepartmentHandlersProps = {}) {
   const {
     createDepartment,
@@ -28,19 +26,13 @@ export function useDepartmentHandlers({
   const handleCreateDepartment = useCallback(
     async (values: DepartmentFormValues | FormValues) => {
       try {
-        // Check if it's the new form with sub-departments
-        if ("subDepartments" in values) {
-          // Create department first
-          await createDepartment(values.name);
-          
-          // If there's a callback, we need to wait for the department to be created
-          // For now, we'll create sub-departments separately after department creation
-          // This would ideally be handled by the backend in a transaction
-          // For now, we'll need to refetch and get the new department ID
+        if ("subDepartments" in values && values.subDepartments) {
+          const subDepartmentsInput = values.subDepartments
+            .filter((sub) => sub.name.trim())
+            .map((sub) => ({ name: sub.name.trim() }));
+
+          await createDepartment(values.name, subDepartmentsInput);
           onDeptSuccess?.();
-          
-          // Note: Creating sub-departments inline would require the new department ID
-          // This is a limitation - ideally the backend should support creating department with sub-departments in one call
         } else {
           await createDepartment(values.name);
           onDeptSuccess?.();
@@ -119,4 +111,3 @@ export function useDepartmentHandlers({
     handleDeleteSubDepartment,
   };
 }
-

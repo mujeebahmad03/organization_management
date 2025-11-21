@@ -77,9 +77,14 @@ export function useDepartmentMutations() {
 
   return {
     createDepartment: useCallback(
-      (name: string) =>
+      (name: string, subDepartments?: Array<{ name: string }>) =>
         createDepartment.execute({
-          input: { name },
+          input: {
+            name,
+            ...(subDepartments && subDepartments.length > 0
+              ? { subDepartments }
+              : {}),
+          },
         }),
       [createDepartment]
     ),
