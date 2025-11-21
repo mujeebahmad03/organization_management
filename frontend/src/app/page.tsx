@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { DashboardHeader } from "@/components/department/header";
 import {
   DepartmentForm,
@@ -17,6 +19,7 @@ import { useDeleteConfirmation } from "@/hooks/use-delete-confirmation";
 import { useDepartmentHandlers } from "@/hooks/use-department-handlers";
 import { useDepartmentSearch } from "@/hooks/use-department-search";
 import { useAuth } from "@/contexts/auth-context";
+import { ROUTES } from "@/lib/constants";
 import type { Department } from "@/lib/types";
 import type { FormValues } from "@/components/department/form/base-form";
 import type { DepartmentFormValues } from "@/components/department/form/department-form";
@@ -25,6 +28,7 @@ export default function DashboardPage() {
   const { user, logout } = useAuth();
   const { departments, loading, error, refetch } = useDepartments();
   const { loading: mutationsLoading } = useDepartmentMutations();
+  const router = useRouter();
 
   const modals = useDepartmentModals();
   const deleteConfirmation = useDeleteConfirmation();
@@ -38,6 +42,21 @@ export default function DashboardPage() {
     },
     onSubDeptSuccess: modals.closeSubDeptModal,
   });
+
+  // Check if error is unauthorized and redirect
+  useEffect(() => {
+    if (error) {
+      const errorMessage = error.message?.toLowerCase() || "";
+      const isUnauthorized =
+        errorMessage.includes("unauthorized") ||
+        errorMessage.includes("forbidden") ||
+        errorMessage.includes("unauthenticated");
+
+      if (isUnauthorized) {
+        router.push(ROUTES.LOGIN);
+      }
+    }
+  }, [error, router]);
 
   // Department Handlers
   const handleCreateDepartment = async (values: DepartmentFormValues) => {
@@ -86,6 +105,20 @@ export default function DashboardPage() {
     return <Loader />;
   }
 
+  // Check if error is unauthorized - if so, redirect will happen in useEffect
+  const errorMessage = error?.message?.toLowerCase() || "";
+  const isUnauthorized =
+    error &&
+    (errorMessage.includes("unauthorized") ||
+      errorMessage.includes("forbidden") ||
+      errorMessage.includes("unauthenticated"));
+
+  // Show loader while redirecting for unauthorized errors
+  if (isUnauthorized) {
+    return <Loader />;
+  }
+
+  // Show error for other types of errors
   if (error) {
     return (
       <div className="flex min-h-screen items-center justify-center">
