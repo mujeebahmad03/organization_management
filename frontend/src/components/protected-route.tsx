@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Loader } from "@/components/loader";
 import { ROUTES } from "@/lib/constants";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -17,7 +17,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated, loading, router]);
 
   if (loading) {
-    return <LoadingSpinner fullScreen />;
+    return <Loader />;
   }
 
   if (!isAuthenticated) {

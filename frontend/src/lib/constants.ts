@@ -13,8 +13,8 @@ export const COOKIE_CONFIG = {
 
 // Routes
 export const ROUTES = {
-  LOGIN: "/login",
-  REGISTER: "/register",
+  LOGIN: "/auth/login",
+  REGISTER: "/auth/register",
   DASHBOARD: "/dashboard",
   DEPARTMENTS: "/dashboard/departments",
   SUB_DEPARTMENTS: "/dashboard/sub-departments",
