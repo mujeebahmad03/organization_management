@@ -1,6 +1,5 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { DepartmentsService } from './departments.service';
 import { Department, SubDepartment } from './entities';
 import {
@@ -14,7 +13,7 @@ import { User } from 'src/modules/users/entities';
 import { JwtAuthGuard } from 'src/common/guards';
 
 @Resolver(() => Department)
-@UseGuards(JwtAuthGuard, ThrottlerGuard)
+@UseGuards(JwtAuthGuard)
 export class DepartmentsResolver {
   constructor(private readonly departmentsService: DepartmentsService) {}
 
@@ -54,7 +53,6 @@ export class DepartmentsResolver {
     return this.departmentsService.delete(id, user);
   }
 
-  // Sub-Department CRUD operations
   @Mutation(() => SubDepartment)
   async createSubDepartment(
     @Args('input') input: CreateSubDepartmentInput,
