@@ -17,9 +17,16 @@ import type { User } from "@/lib/types";
 interface DashboardHeaderProps {
   user: User;
   onLogout: () => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
-export function DashboardHeader({ user, onLogout }: DashboardHeaderProps) {
+export function DashboardHeader({
+  user,
+  onLogout,
+  searchQuery,
+  onSearchChange,
+}: DashboardHeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="flex items-center gap-2 font-bold text-xl tracking-tight md:min-w-48">
@@ -30,13 +37,18 @@ export function DashboardHeader({ user, onLogout }: DashboardHeaderProps) {
       </div>
 
       <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <form className="ml-auto flex-1 sm:flex-initial">
+        <form
+          className="ml-auto flex-1 sm:flex-initial"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search departments..."
-              className="w-full rounded-lg bg-background pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="w-full rounded-lg bg-background pl-8 pr-4 sm:w-[300px] md:w-[200px] lg:w-[300px]"
             />
           </div>
         </form>
