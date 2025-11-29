@@ -26,8 +26,8 @@ export class DepartmentsResolver {
   }
 
   @Query(() => [Department], { name: 'getDepartments' })
-  async getDepartments(): Promise<Department[]> {
-    return this.departmentsService.findAll();
+  async getDepartments(@CurrentUser() user: User): Promise<Department[]> {
+    return this.departmentsService.findAll(user);
   }
 
   @Query(() => Department, { name: 'getDepartment' })
@@ -62,8 +62,8 @@ export class DepartmentsResolver {
   }
 
   @Query(() => [SubDepartment], { name: 'getSubDepartments' })
-  async getSubDepartments(): Promise<SubDepartment[]> {
-    return this.departmentsService.findAllSubDepartments();
+  async getSubDepartments(@CurrentUser() user: User): Promise<SubDepartment[]> {
+    return this.departmentsService.findAllSubDepartments(user);
   }
 
   @Query(() => SubDepartment, { name: 'getSubDepartment' })

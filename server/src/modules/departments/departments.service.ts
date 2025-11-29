@@ -44,8 +44,9 @@ export class DepartmentsService {
     return this.departmentRepository.save(department);
   }
 
-  async findAll(): Promise<Department[]> {
+  async findAll(user: User): Promise<Department[]> {
     return this.departmentRepository.find({
+      where: { createdBy: user.id },
       relations: ['subDepartments'],
       order: {
         id: 'ASC',
@@ -138,9 +139,14 @@ export class DepartmentsService {
     return this.subDepartmentRepository.save(subDepartment);
   }
 
-  async findAllSubDepartments(): Promise<SubDepartment[]> {
+  async findAllSubDepartments(user: User): Promise<SubDepartment[]> {
     return this.subDepartmentRepository.find({
       relations: ['department'],
+      where: {
+        department: {
+          createdBy: user.id,
+        },
+      },
       order: {
         id: 'ASC',
       },
